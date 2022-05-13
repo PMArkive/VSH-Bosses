@@ -45,14 +45,25 @@ jobs:
         run: |
           spcomp $SCRIPTS_PATH/saxtonhale_bosses.sp -i$SCRIPTS_PATH/include -O2 -v2 -o=output/saxtonhale_bosses.smx
 
-      - name: Upload Plugin to repo
-        uses: dmnemec/copy_file_to_another_repo_action@main
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+  upload_source:
+    name: Upload Source
+    needs: build_linux
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Package source code
+        working-directory: ${{ env.GITHUB_WORKSPACE }}
+        run: |
+          zip -r 'Source code.zip' ./addons
+          tar cvf 'Source code.tar' addons
+      
+      # this will upload a zip with a zip and a tar file, this is to avoid being rate liited by the github API
+      - name: Upload source code
+        uses: actions/upload-artifact@v2
         with:
-          source_file: 'saxtonhale_bosses.smx'
-          destination_repo: 'TheRefuge/VSH-Bosses'
-          #destination_folder: '$SOURCEMOD_PATH/plugins/saxtonhale_bosses.smx'
-          user_email: 'aidan.sanders1316@gmail.com'
-          user_name: 'asanders'
-          commit_message: 'Plugin Upload'
+          name: VSH-Bosses Source
+          if-no-files-found: error
+          path: |
+            Source code.zip
+            Source code.tar
