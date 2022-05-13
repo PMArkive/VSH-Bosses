@@ -1,0 +1,43 @@
+# Credit: Pheubel - VSH2 Continuous Integration.
+name: Continuous Integration
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build_linux:
+    name: (Linux) Compile SourcePawn ${{matrix.sm_version}}
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        sm_version: ['1.10']
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup SourcePawn Compiler ${{ matrix.sm_version }}
+        uses: rumblefrog/setup-sp@master
+        with:
+          version: ${{ matrix.sm_version }}
+
+      - name: Setup Environment
+        run: |
+          mkdir output
+          SOURCEMOD_PATH=$GITHUB_WORKSPACE/addons/sourcemod
+          echo "SOURCEMOD_PATH=$SOURCEMOD_PATH" >> $GITHUB_ENV
+          echo "SCRIPTS_PATH=$SOURCEMOD_PATH/scripting" >> $GITHUB_ENV
+        
+      - name: Fetch plugin dependencies
+        run: |
+          wget https://raw.githubusercontent.com/redsunservers/VSH-Rewrite/master/addons/sourcemod/scripting/include/saxtonhale.inc -P $includePath
+          wget https://raw.githubusercontent.com/Teamkiller324/Updater/main/scripting/include/updater.inc -P $includePath
+        
+      - name: Compile Plugin
+        run: |
+          spcomp $SCRIPTS_PATH/saxtonhale_bosses.sp -i$SCRIPTS_PATH/include -O2 -v2 -o=output/saxtonhale_bosses.smx
