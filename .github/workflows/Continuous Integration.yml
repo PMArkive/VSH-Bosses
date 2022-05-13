@@ -28,7 +28,6 @@ jobs:
 
       - name: Setup Environment
         run: |
-          mkdir output
           SOURCEMOD_PATH=$GITHUB_WORKSPACE/addons/sourcemod
           echo "SOURCEMOD_PATH=$SOURCEMOD_PATH" >> $GITHUB_ENV
           echo "SCRIPTS_PATH=$SOURCEMOD_PATH/scripting" >> $GITHUB_ENV
@@ -43,7 +42,7 @@ jobs:
         
       - name: Compile Plugin
         run: |
-          spcomp $SCRIPTS_PATH/saxtonhale_bosses.sp -i$SCRIPTS_PATH/include -O2 -v2 -o=output/saxtonhale_bosses.smx
+          spcomp $SCRIPTS_PATH/saxtonhale_bosses.sp -i$SCRIPTS_PATH/include -O2 -v2 -o $SOURCEMOD_PATH/plugins/saxtonhale_bosses.smx
 
   upload_source:
     name: Upload Source
