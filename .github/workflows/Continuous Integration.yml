@@ -36,6 +36,9 @@ jobs:
       - name: Fetch plugin dependencies
         run: |
           wget https://raw.githubusercontent.com/redsunservers/VSH-Rewrite/master/addons/sourcemod/scripting/include/saxtonhale.inc -P $includePath
+          wget https://raw.githubusercontent.com/peace-maker/DHooks2/dynhooks/sourcemod_files/scripting/include/dhooks.inc -P $includePath
+          wget https://raw.githubusercontent.com/nosoop/SM-TFEconData/master/scripting/include/tf_econ_data.inc -P $includePath
+          wget https://raw.githubusercontent.com/FlaminSarge/tf2attributes/master/tf2attributes.inc -P $includePath
           wget https://raw.githubusercontent.com/Teamkiller324/Updater/main/scripting/include/updater.inc -P $includePath
         
       - name: Compile Plugin
