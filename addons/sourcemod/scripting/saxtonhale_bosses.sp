@@ -13,7 +13,7 @@
 #pragma newdecls required
 
 #define PLUGIN_VERSION                "1.0.0"
-#define UPDATE_URL                    "https://raw.githubusercontent.com/TheRefuge/VSH-Horsemann/main/updater.txt"
+#define UPDATE_URL                    "https://raw.githubusercontent.com/TheRefuge/VSH-Bosses/main/updater.txt"
 
 #define TF_MAXPLAYERS                 34 // 32 clients + 1 for 0/world/console + 1 for replay/SourceTV
 #define MAX_ATTRIBUTES_SENT           20
@@ -28,7 +28,7 @@
 
 public Plugin myinfo =
 {
-	name        = "VSH-Rewrite subplugin for handling bosses",
+	name        = "TheRefuge VSH-Rewrite bosses subplugin",
 	author      = "TheRefuge Community",
 	description = "Open-Source bosses",
 	version     = PLUGIN_VERSION,
