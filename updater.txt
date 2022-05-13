@@ -1,0 +1,16 @@
+"Updater"
+{
+	"Information"
+	{
+		"Version"
+		{
+			"Latest"	"1.0.0"
+		}
+	}
+
+	"Files"
+	{
+		"Plugin"	"Path_SM/plugins/saxtonhale_bosses.smx"
+		"Source"	"Path_SM/scripting/saxtonhale_bosses.sp"
+	}
+}
