@@ -21,48 +21,23 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Setup SourcePawn Compiler ${{ matrix.sm_version }}
-        uses: rumblefrog/setup-sp@master
-        with:
-          version: ${{ matrix.sm_version }}
-
-      - name: Setup Environment
+      - name: Install
         run: |
-          SOURCEMOD_PATH=$GITHUB_WORKSPACE/addons/sourcemod
-          echo "SOURCEMOD_PATH=$SOURCEMOD_PATH" >> $GITHUB_ENV
-          echo "SCRIPTS_PATH=$SOURCEMOD_PATH/scripting" >> $GITHUB_ENV
+          bash scripts/install.sh
         
-      - name: Fetch plugin dependencies
+      - name: Compile
         run: |
-          wget https://raw.githubusercontent.com/redsunservers/VSH-Rewrite/master/addons/sourcemod/scripting/include/saxtonhale.inc -P $includePath
-          wget https://raw.githubusercontent.com/peace-maker/DHooks2/dynhooks/sourcemod_files/scripting/include/dhooks.inc -P $includePath
-          wget https://raw.githubusercontent.com/nosoop/SM-TFEconData/master/scripting/include/tf_econ_data.inc -P $includePath
-          wget https://raw.githubusercontent.com/FlaminSarge/tf2attributes/master/tf2attributes.inc -P $includePath
-          wget https://raw.githubusercontent.com/Teamkiller324/Updater/main/scripting/include/updater.inc -P $includePath
+          cd build/addons/sourcemod/scripting
+          ./spcomp saxtonhale_bosses.sp -o ../plugins/saxtonhale_bosses.smx
         
-      - name: Compile Plugin
-        run: |
-          spcomp $SCRIPTS_PATH/saxtonhale_bosses.sp -i$SCRIPTS_PATH/include -O2 -v2 -o $SOURCEMOD_PATH/plugins/saxtonhale_bosses.smx
-
-  upload_source:
-    name: Upload Source
-    needs: build_linux
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Package source code
-        working-directory: ${{ env.GITHUB_WORKSPACE }}
-        run: |
-          zip -r 'Source code.zip' ./addons
-          tar cvf 'Source code.tar' addons
-      
-      # this will upload a zip with a zip and a tar file, this is to avoid being rate liited by the github API
-      - name: Upload source code
-        uses: actions/upload-artifact@v2
+      - name: Pushes saxtonhale_bosses.smx
+        uses: dmnemec/copy_file_to_another_repo_action@main
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          name: VSH-Bosses Source
-          if-no-files-found: error
-          path: |
-            Source code.zip
-            Source code.tar
+          source_file: 'build/addons/sourcemod/plugins/saxtonhale_bosses.smx'
+          destination_repo: 'TheRefuge/VSH-Bosses'
+          destination_folder: 'addons/sourcemod/plugins'
+          user_email: 'aidan.sanders1316@gmail.com'
+          user_name: 'asanders'
+          commit_message: 'Plugin Update'
